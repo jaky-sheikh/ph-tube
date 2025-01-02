@@ -31,7 +31,7 @@ const displayVideos = (videos) => {
         <h2 class="font-bold">${video.title}</h2>
         <div class="flex items-center gap-2">
             <p>${video.authors[0].profile_name}</p>
-            <img class="w-5" src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" alt="verified">
+            ${video.authors[0].verified === true ? `<img class="w-5" src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" alt="verified">` : ""}
         </div>
         <p></p>
     </div>
