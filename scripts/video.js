@@ -6,6 +6,13 @@ function getTime(time) {
     return `${hour} hours ${minute} minutes ${remainSeconds} seconds`
 }
 
+const removeActiveClass = () => {
+    const buttons = document.getElementsByClassName('category-btn');
+    for (let btn of buttons) {
+        btn.classList.remove('active');
+    }
+}
+
 const loadCategories = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
         .then(res => res.json())
@@ -22,13 +29,30 @@ const loadCategoryVideo = (id) => {
     // alert(id);
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then(res => res.json())
-        .then(data => displayVideos(data.category))
+        .then(data => {
+            removeActiveClass();
+            const activeBtn = document.getElementById(`btn-${id}`);
+            activeBtn.classList.add('active');
+            displayVideos(data.category);
+        })
         .catch((error) => console.log(error));
 }
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('videos');
     videoContainer.innerHTML = '';
+    if (videos.length === 0) {
+        videoContainer.classList.remove('grid');
+        videoContainer.innerHTML = `
+        <div class="min-h-[300px] flex flex-col gap-5 justify-center items-center">
+        <img src="assets/Icon.png" alt="">
+        <h2>No content here</h2>
+    </div>
+        `;
+        return;
+    } else {
+        videoContainer.classList.add('grid');
+    }
     videos.forEach((video) => {
         console.log(video);
         const card = document.createElement('div');
@@ -69,7 +93,7 @@ const displayCategories = (categories) => {
         // create a button
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `
-        <button onclick="loadCategoryVideo(${item.category_id})" class="btn">
+        <button id="btn-${item.category_id}" onclick="loadCategoryVideo(${item.category_id})" class="btn category-btn">
         ${item.category}
         </button>
         `;
